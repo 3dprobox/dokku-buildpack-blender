@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+function error() {
+  echo " !     $*" >&2
+  exit 1
+}
+
 wget -P /tmp/blender/ --no-parent https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.tar.xz
 
 mkdir -p /blender
