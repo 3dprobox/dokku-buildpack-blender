@@ -4,7 +4,7 @@ wget -P /tmp/blender/ --no-parent https://download.blender.org/release/Blender4.
 
 mkdir -p /blender
 
-tar -xvJf /tmp/blender-4.0.2-linux-x64.tar.xz --strip 1 -C /blender
+tar -xvJf /tmp/blender/blender-4.0.2-linux-x64.tar.xz --strip 1 -C /blender
 
 ln -sf /blender/blender /usr/bin/blender
 
