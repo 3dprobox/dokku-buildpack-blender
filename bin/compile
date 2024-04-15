@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# fail fast
+set -eo pipefail
+
 function error() {
   echo " !     $*" >&2
   exit 1
@@ -7,10 +10,10 @@ function error() {
 
 wget -P /tmp/blender/ --no-parent https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.tar.xz
 
-mkdir -p /blender
+mkdir -p /usr/lib/blender
 
-tar -xvJf /tmp/blender/blender-4.0.2-linux-x64.tar.xz --strip 1 -C /blender
+tar -xvJf /tmp/blender/blender-4.0.2-linux-x64.tar.xz --strip 1 -C /usr/lib/blender
 
-ln -sf /blender/blender /usr/bin/blender
+ln -sf /usr/lib/blender/blender /usr/bin/blender
 
 rm -rf /tmp/blender/
