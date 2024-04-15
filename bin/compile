@@ -1,19 +1,43 @@
 #!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
 
 # fail fast
 set -eo pipefail
+
+# parse params
+BUILD_DIR=$1
+CACHE_DIR=$2
+BUILDPACK_NAME=blender
 
 function error() {
   echo " !     $*" >&2
   exit 1
 }
 
-wget -P /tmp/blender/ --no-parent https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.tar.xz
 
-mkdir -p /usr/lib/blender
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
 
-tar -xvJf /tmp/blender/blender-4.0.2-linux-x64.tar.xz --strip 1 -C /usr/lib/blender
+function vendor() {
+  url="$1"
+  path="$2"
 
-ln -sf /usr/lib/blender/blender /usr/bin/blender
+  echo "Fetching $url" | indent
+  mkdir -p $path
 
-rm -rf /tmp/blender/
+  wget -P $CACHE_DIR --no-parent $url
+
+  tar -xvJf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz" --strip 1 -C $path
+  rm -rf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz"
+
+  export PATH=$path:$PATH
+
+  true
+}
+
+vendor "https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.tar.xz" "$BUILD_DIR/vendor/blender"
