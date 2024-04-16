@@ -35,6 +35,9 @@ function vendor() {
   tar -xJf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz" --strip 1 -C $path
   rm -rf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz"
 
+  [ -d "$path" ] && echo $path:$PATH
+  [ -d "$path" ] && export PATH=$path:$PATH
+
   true
 }
 
@@ -45,7 +48,8 @@ vendor "https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.
 echo "-----> Configuring build environment"
 
 cat <<EOF > export
-export PATH="$BUILD_DIR/vendor/blender:$PATH"
+echo "$PATH:\$PATH"
+export PATH="$PATH:\$PATH"
 EOF
 
 
@@ -53,5 +57,6 @@ echo "-----> Building runtime environment"
 mkdir -p $BUILD_DIR/.profile.d
 
 cat <<EOF > $BUILD_DIR/.profile.d/$BUILDPACK_NAME.sh
-export PATH="$BUILD_DIR/vendor/blender:$PATH"
+echo "${PATH//$BUILD_DIR//app}:\$PATH"
+export PATH="${PATH//$BUILD_DIR//app}:\$PATH"
 EOF
