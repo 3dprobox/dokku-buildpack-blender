@@ -30,14 +30,28 @@ function vendor() {
   echo "Fetching $url" | indent
   mkdir -p $path
 
-  wget -P $CACHE_DIR --no-parent $url
+  wget -nv -P . --no-parent https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.tar.xz
 
-  tar -xvJf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz" --strip 1 -C $path
+  tar -xJf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz" --strip 1 -C $path
   rm -rf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz"
-
-  export PATH="$path:$PATH"
 
   true
 }
 
+echo "-----> Vendoring binaries"
 vendor "https://download.blender.org/release/Blender4.0/blender-4.0.2-linux-x64.tar.xz" "$BUILD_DIR/vendor/blender"
+
+
+echo "-----> Configuring build environment"
+
+cat <<EOF > export
+export PATH="$BUILD_DIR/vendor/blender:$PATH"
+EOF
+
+
+echo "-----> Building runtime environment"
+mkdir -p $BUILD_DIR/.profile.d
+
+cat <<EOF > $BUILD_DIR/.profile.d/$BUILDPACK_NAME.sh
+export PATH="$BUILD_DIR/vendor/blender:$PATH"
+EOF
