@@ -35,7 +35,7 @@ function vendor() {
   tar -xvJf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz" --strip 1 -C $path
   rm -rf "$CACHE_DIR/blender-4.0.2-linux-x64.tar.xz"
 
-  export PATH=$path:$PATH
+  export PATH="$path:$PATH"
 
   true
 }
